@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
@@ -18,13 +20,12 @@ void main() {
   runApp(YoutubePlayerDemoApp());
 }
 
-/// Creates [YoutubePlayerDemoApp] widget.
 class YoutubePlayerDemoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Youtube Player Flutter',
+      title: 'Video player',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         appBarTheme: const AppBarTheme(
@@ -122,7 +123,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return YoutubePlayerBuilder(
       onExitFullScreen: () {
-        // The player forces portraitUp after exiting fullscreen. This overrides the behaviour.
         SystemChrome.setPreferredOrientations(DeviceOrientation.values);
       },
       player: YoutubePlayer(
@@ -190,161 +190,6 @@ class _MyHomePageState extends State<MyHomePage> {
         body: ListView(
           children: [
             player,
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _space,
-                  _text('Title', _videoMetaData.title),
-                  _space,
-                  _text('Channel', _videoMetaData.author),
-                  _space,
-                  _text('Video Id', _videoMetaData.videoId),
-                  _space,
-                  Row(
-                    children: [
-                      _text(
-                        'Playback Quality',
-                        _controller.value.playbackQuality ?? '',
-                      ),
-                      const Spacer(),
-                      _text(
-                        'Playback Rate',
-                        '${_controller.value.playbackRate}x  ',
-                      ),
-                    ],
-                  ),
-                  _space,
-                  TextField(
-                    enabled: _isPlayerReady,
-                    controller: _idController,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter youtube \<video id\> or \<link\>',
-                      fillColor: Colors.blueAccent.withAlpha(20),
-                      filled: true,
-                      hintStyle: const TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.blueAccent,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () => _idController.clear(),
-                      ),
-                    ),
-                  ),
-                  _space,
-                  Row(
-                    children: [
-                      _loadCueButton('LOAD'),
-                      const SizedBox(width: 10.0),
-                      _loadCueButton('CUE'),
-                    ],
-                  ),
-                  _space,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.skip_previous),
-                        onPressed: _isPlayerReady
-                            ? () => _controller.load(_ids[
-                                (_ids.indexOf(_controller.metadata.videoId) -
-                                        1) %
-                                    _ids.length])
-                            : null,
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          _controller.value.isPlaying
-                              ? Icons.pause
-                              : Icons.play_arrow,
-                        ),
-                        onPressed: _isPlayerReady
-                            ? () {
-                                _controller.value.isPlaying
-                                    ? _controller.pause()
-                                    : _controller.play();
-                                setState(() {});
-                              }
-                            : null,
-                      ),
-                      IconButton(
-                        icon: Icon(_muted ? Icons.volume_off : Icons.volume_up),
-                        onPressed: _isPlayerReady
-                            ? () {
-                                _muted
-                                    ? _controller.unMute()
-                                    : _controller.mute();
-                                setState(() {
-                                  _muted = !_muted;
-                                });
-                              }
-                            : null,
-                      ),
-                      FullScreenButton(
-                        controller: _controller,
-                        color: Colors.blueAccent,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.skip_next),
-                        onPressed: _isPlayerReady
-                            ? () => _controller.load(_ids[
-                                (_ids.indexOf(_controller.metadata.videoId) +
-                                        1) %
-                                    _ids.length])
-                            : null,
-                      ),
-                    ],
-                  ),
-                  _space,
-                  Row(
-                    children: <Widget>[
-                      const Text(
-                        "Volume",
-                        style: TextStyle(fontWeight: FontWeight.w300),
-                      ),
-                      Expanded(
-                        child: Slider(
-                          inactiveColor: Colors.transparent,
-                          value: _volume,
-                          min: 0.0,
-                          max: 100.0,
-                          divisions: 10,
-                          label: '${(_volume).round()}',
-                          onChanged: _isPlayerReady
-                              ? (value) {
-                                  setState(() {
-                                    _volume = value;
-                                  });
-                                  _controller.setVolume(_volume.round());
-                                }
-                              : null,
-                        ),
-                      ),
-                    ],
-                  ),
-                  _space,
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 800),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.0),
-                      color: _getStateColor(_playerState),
-                    ),
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      _playerState.toString(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
